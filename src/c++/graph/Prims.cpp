@@ -22,41 +22,45 @@ vector<vector<Edge*>> findMST(vector<vector<Edge*>>& graph, int startNode);
  * Finds the minimum spanning tree of a graph by adding edges with the minimum attachment cost to the MST.
  * This implementation uses a priority queue.
  *
- * Time complexity: O(m*log(n))
+ * Time complexity: O(E*log(V))
  *
 */
 
 vector<vector<Edge*>> findMST(vector<vector<Edge*>>& graph, int startNode) {
-    vector<int> A(graph.size(), INT_MAX); // minimum attachment cost for each vertex
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> P; // min-heap with pair <attachment cost, node>
-    vector<vector<Edge*>> T; // spanning tree
-    for (int i = 0; i < graph.size(); i++) {
-        T.push_back({});
-    }
-    vector<int> parent(graph.size()); // keeps track of each node's parents (edge with min attachment cost)
+    int n = graph.size();
+    // Min-heap with pair <attachment cost, { node, parent }>
+    priority_queue<pair<int, vector<int>>, vector<pair<int, vector<int>>>, greater<pair<int, vector<int>>>> P;
+    vector<bool> visited(n);
 
-    A[startNode] = 0;
-    P.push(pair<int, int>(0, startNode));
+    vector<vector<Edge*>> T(n); // MST result
+    int totalWeight = 0;
+
+    P.push(pair<int, vector<int>>(0, { startNode, -1 }));
     while (!P.empty()) {
-        pair<int, int> curr = P.top();
-        int currNode = curr.second;
-        int attachWeight = curr.first;
+        pair<int, vector<int>> entry = P.top();
+        int weight = entry.first;
+        int node = entry.second[0];
+        int parent = entry.second[1];
         P.pop();
 
-        if (currNode != startNode) {
-            // add this node and min edge to the MST
-            T[parent[currNode]].push_back(new Edge(currNode, attachWeight));
-            T[currNode].push_back(new Edge(parent[currNode], attachWeight));
+        if (visited[node]) continue;
+
+        visited[node] = true;
+
+        if (parent != -1) {
+            totalWeight += weight;
+            T[parent].push_back(new Edge(node, weight));
+            T[node].push_back(new Edge(parent, weight));
         }
 
-        for (Edge* neighbor : graph[currNode]) {
-            if (T[neighbor->to].empty() && neighbor->weight < A[neighbor->to]) {
-                A[neighbor->to] = neighbor->weight;
-                P.push(make_pair(A[neighbor->to], neighbor->to));
-                parent[neighbor->to] = currNode;
+        for (auto neighbor : graph[node]) {
+            if (!visited[neighbor->to]) {
+                P.push(pair<int, vector<int>>(neighbor->weight, { neighbor->to, node }));
             }
         }
     }
+
+    cout << "MST weight: " << totalWeight << endl;
 
     return T;
 }

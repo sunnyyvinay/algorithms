@@ -44,7 +44,7 @@ void unionSets(int parent[], int rank[], int x, int y) {
  * Finds the minimum spanning tree of a graph by sorting the edges and adding an edge only if it doesn't cause a cycle.
  * This implementation uses a union-find data structure with 3 operations (make, find, and union)
  *
- * Time complexity: O(n*log(m))
+ * Time complexity: O(V*log(E))
  *
 */
 

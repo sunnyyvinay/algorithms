@@ -23,7 +23,7 @@ vector<int> findPath(vector<vector<Edge*>>& graph, int startNode);
  * It calculates the path for every vertex from a given starting point.
  * This implementation uses a min-priority_queue based on the distance.
  *
- * Time complexity: O(m*log(n))
+ * Time complexity: O(E*log(V))
  *
  */
 

@@ -9,7 +9,7 @@ using namespace std;
  * Sorts vertices based on their order of dependencies.
  * Only works for directed, acyclic graphs (DAGs).
  *
- * Time complexity: O(m+n)
+ * Time complexity: O(V + E)
  *
  */
 
